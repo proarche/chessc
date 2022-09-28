@@ -1,0 +1,68 @@
+[Event "Sunway Sitges"]
+[Site "Sitges ESP"]
+[Date "2020.12.19"]
+[EventDate "2020.12.13"]
+[Round "6.5"]
+[Result "1-0"]
+[White "Hans Moke Niemann"]
+[Black "Matthieu Cornette"]
+[ECO "D31"]
+[WhiteElo "2478"]
+[BlackElo "2558"]
+[PlyCount "71"]
+
+1. d4 d5 2. c4 e6 3. Nc3 h6 {I was ready to go into the
+Nimzo-Indian but Cornette deviated. While I was somewhat
+familiar with these structures, I didn't remember anything
+concrete so I decided to go for a simple setup.} 4. Nf3 Nf6
+5. e3 {I expected ... a7-a6 here, forcing me to release the
+tension with c4xd5. Why? I don't want to play a move like
+Bf1-e2, allowing ... d5xc4 and ... b7-b5 .} Nbd7 (5... a6
+6. Be2 dxc4 7. Bxc4 b5) 6. Bd3 dxc4 7. Bxc4 a6 8. a4 c5 9. O-O
+{This position is a transposition to a Queen's Gambit
+Accepted, but the knight is on d7 instead of c6 and Black has
+wasted a tempo with ... h7-h6. I felt that this position down
+one tempo and with an inferior knight placement would provide
+me an advantage.} Qc7 {Another key waste of tempo. My opponent
+underestimated my potential initiative.} (9... cxd4 10. exd4
+Nb6 11. Bb3 Nbd5 {Black would like to setup a blockade on the
+d5 square, followed by .. . Bf8-e7 and castles. But he has
+squandered too many tempi, and White can punish the king in
+the center.} 12. a5 (12. Re1 Be7 {The computer suggests
+ignoring the a4-a5 idea completely and normally developing
+pieces, preparing for a possible kingside attack.} 13. Ne5 O-O
+14. Qd3) 12... Be7 13. Ba4+ Bd7 14. Ne5 Bxa4 15. Qxa4+ Kf8
+16. Qb3 Rb8 {Although this isn't the computer's top choice, my
+calculation ended here and I concluded that I had an advantage
+due to the king on f8 and lead in development}) 10. Qe2 Bd6
+{My opponent has wasted one tempo with ... h7-h6, a second
+with ... Bd6, and a third with ... Qc7. My next moves are very
+strong.} 11. dxc5 Bxc5 12. e4 Ng4 13. h3 Nde5 ({ The move}
+13... h5 {initially scared me but after} 14. Ba2 {Black's
+position may look imposing but in reality there is nothing to
+fear.}) 14. hxg4 Nxc4 15. e5 {I believe the position is
+practically lost at this point. If Black castles, I'll have
+moves like g4-g5 or Nc3-e4-f6 to breakthrough. Additionally,
+the c4-knight is extremely loose and my opponent is begging me
+to put a rook on c1. } Bd7 16. Bf4 Na5 17. Ne4 Be7 18. Rfc1
+Qb6 19. Be3 Qb4 20. Bd2 Qb6 21. Be3 { I decided to repeat
+because I was down to about 25 minutes.} Qb4 {There are many
+options here but I decided to play the simplest one, as
+Black's position falls apart without the dark-squared bishop.}
+22. Nd6+ Bxd6 23. exd6 Qxg4 24. Rc7 {The pawn on g4 is
+irrelevant. Black's pieces are dominated and castling is
+basically impossible without also giving up a significant
+amount of material.} Nc6 25. Rc1 Ne5 ({The final mistake which
+seals the game.} 25... e5 {would have been a better try, but
+the position is still extremely desperate.}) 26. Bb6 Nxf3+
+27. Qxf3 Qxf3 28. gxf3 {Compare the rooks on c7 and c1 to the
+rooks on a8 and h8 - it tells you everything you need to know
+about the position.} Rb8 29. Ba7 Rd8 30. Rxb7 O-O 31. b3
+{Consolidating the position and preparing to bring the second
+rook to the seventh file.} e5 32. Bb6 Rb8 33. Rcc7 {The d-pawn
+is unstoppable.} Be6 34. d7 Ra8 35. Bc5 Rfb8 36. Be7 {The
+final dagger, preventing all counterplay. I was especially
+pleased by this game because I didn't take unnecessary risks
+in the opening and played logical moves. I also managed my
+time well and played precisely at all of the critical moments
+without faltering.} 1-0
