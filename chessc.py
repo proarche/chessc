@@ -46,18 +46,23 @@ def analyze_file(engines, moves_per_engine, thinking_time, depth, book, pgn_path
         "with",
         ", ".join(repr(str(ep)) for ep in ENGINE_PATHS),
     )
-    (white, black) = calculate_correlation(
+    (white, name_player_white, black, name_player_black) = calculate_correlation(
         engines, moves_per_engine, thinking_time, depth, book, pgn
     )
 
-    print("\nWhite: " + str(white) + "%")
-    print("Black: " + str(black) + "%")
+    print("\nPlayer with whites:", name_player_white, "|", str(white) + "%")
+    print("Player with blacks:", name_player_black, "|", str(black) + "%")
     print("Analysis finished:", repr(str(pgn_path)))
 
 
 def calculate_correlation(engines, moves_per_engine, thinking_time, depth, book, pgn):
     game = chess.pgn.read_game(pgn)
     board = game.board()
+
+    # name of the player playing with white pieces
+    name_player_white = game.headers.get("White")
+    # name of the player playing with black pieces
+    name_player_black = game.headers.get("Black")
 
     best_white = []
     best_black = []
@@ -138,7 +143,9 @@ def calculate_correlation(engines, moves_per_engine, thinking_time, depth, book,
     return (
         # returns the percent of moves by the human that were top choices of the engines
         round(100 * (sum(best_white) / len(best_white)), 2),
+        name_player_white,  # the name of the player with white pieces
         round(100 * (sum(best_black) / len(best_black)), 2),
+        name_player_black,  # the name of the player with black pieces
     )
 
 
@@ -190,14 +197,14 @@ parser.add_argument(
     help="Folder with *.pgn files or a single pgn file to analyse",
 )
 parser.add_argument(
-    "-x",
+    "-v",
     "--verbose",
     action="store_true",
     default=False,
     help="Show verbose info about the analysis when multipv(--principal-variations) mode is selected",
 )
 parser.add_argument(
-    "-v", "--version", action="version", version="{} v{}".format(prog_name, version)
+    "-V", "--version", action="version", version="{} v{}".format(prog_name, version)
 )
 args = parser.parse_args()
 
