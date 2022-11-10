@@ -6,15 +6,39 @@ import chess.pgn
 import chess.polyglot
 import argparse
 
-# should use at least two engines
+# TODO: this engines should be passed via command line arguments
+# you can add engines declaring a variable here with the path of the engine binary:
 STOCKFISH_PATH = "./engines/stockfish_15_linux_x64/stockfish_15_x64"
 KOMODO_PATH = "./engines/komodo-13_201fd6/Linux/komodo-13.02-linux"
-# this engines should be passed via command line arguments
+# for every variable you add with a new engine, you should add it to this array below:
 ENGINE_PATHS = [STOCKFISH_PATH, KOMODO_PATH]
+# if you want to analyse using only one engine, you could do it uncomenting one of the next lines and declaring the array like so:
+# ENGINE_PATHS = [STOCKFISH_PATH]  # for using only stockfish
+# ENGINE_PATHS = [KOMODO_PATH]  # for using only Komodo
 
 BOOK_PATH = "./books/komodo.bin"
 prog_name = "Chess Correlation Tester"
 version = "0.0.1"
+
+
+class Logger(object):
+    def __init__(self, pgn_path):
+        self.terminal = sys.stdout
+        self.log = open(
+            # will create a log file in the folder containing the PGN file
+            str(pgn_path) + ".log",
+            "a",
+        )
+
+    def write(self, message):
+        self.terminal.write(message)
+        self.log.write(message)
+
+    def flush(self):
+        pass
+
+
+old_stdout = sys.stdout
 
 
 def main(moves_per_engine, thinking_time, depth, pgn):
@@ -23,6 +47,11 @@ def main(moves_per_engine, thinking_time, depth, pgn):
     engines = []
     for engine_path in ENGINE_PATHS:
         engines.append(chess.engine.SimpleEngine.popen_uci(engine_path))
+
+    # set the options to the engines
+    for engine in engines:
+        engine.configure({"Hash": 128})  # hash size in MiB
+        engine.configure({"Threads": 2})  # number of processor threads
 
     if Path(pgn).is_dir():
         analyze_folder(engines, moves_per_engine, thinking_time, depth, book, pgn)
@@ -40,31 +69,50 @@ def analyze_folder(engines, moves_per_engine, thinking_time, depth, book, pgn_di
 
 def analyze_file(engines, moves_per_engine, thinking_time, depth, book, pgn_path):
     pgn = open(pgn_path)
+    global logger_stdout
+    logger_stdout = Logger(pgn_path)
+    sys.stdout = logger_stdout
+    print("-" * 80)
     print(
         "Analysing:",
         repr(str(pgn_path)),
         "with",
         ", ".join(repr(str(ep)) for ep in ENGINE_PATHS),
+        "Analysis mode:",
+        "-t " + str(thinking_time) if thinking_time != None else "-d " + str(depth),
     )
+    print("\n" + "-" * 80)
+
     # run the correlation and print the results
     calculate_correlation(engines, moves_per_engine, thinking_time, depth, book, pgn)
 
     print("Analysis finished:", repr(str(pgn_path)))
+    sys.stdout = old_stdout
 
 
 def calculate_correlation(engines, moves_per_engine, thinking_time, depth, book, pgn):
     # the direction of the analysis, forward by default
     direction_forwards = not args.backwards
-    # number of games inside PGN file
+    # counter of the current game number
     game_number = 0
+    # number of games inside PGN file
+    number_of_games_in_pgn = 0
 
+    while True:
+        # read just headers
+        headers = chess.pgn.read_headers(pgn)
+        if headers is None:
+            break
+        else:
+            number_of_games_in_pgn += 1
+
+    # put the offset to the start of PGN to read games
+    pgn.seek(0)
     while True:
         # read the game from PGN and advances the queue
         game = chess.pgn.read_game(pgn)
         if game is None:  # no more games in PGN, it's the end of the file
             break  # exit the loop
-
-        # game = chess.pgn.read_game(pgn)
 
         # if the analysis direction is forwards
         if direction_forwards:
@@ -191,44 +239,59 @@ def calculate_correlation(engines, moves_per_engine, thinking_time, depth, book,
         print(
             "\nAnalysis of game",
             game_number,
+            "of",
+            number_of_games_in_pgn,
             "| Date:",
-            game.headers.get("Date") + "-" + game.headers.get("Time"),
+            game.headers.get("Date")
+            + (
+                "-" + str(game.headers.get("Time"))
+                if game.headers.get("Time") != None
+                else ""
+            ),
             "| Opening:",
             game.headers.get("Opening"),
         )
-        print(
-            "Player with whites:",
-            name_player_white,
-            "|",
-            str(round(100 * (sum(best_white) / len(best_white)), 2)) + "%",
-        )
-        print(
-            "Player with blacks:",
-            name_player_black,
-            "|",
-            str(round(100 * (sum(best_black) / len(best_black)), 2)) + "%",
-            "\n" + "-" * 80,  # separator between game analysis, 80 chars wide
-        )
-
-    # return (
-    #     # returns the percent of moves by the human that were top choices of the engines
-    #     round(100 * (sum(best_white) / len(best_white)), 2),
-    #     name_player_white,  # the name of the player with white pieces
-    #     round(100 * (sum(best_black) / len(best_black)), 2),
-    #     name_player_black,  # the name of the player with black pieces
-    # )
+        if len(best_white) == 0 or len(best_black) == 0:
+            print(
+                "Player with whites:",
+                name_player_white,
+                "|",
+                "Player with blacks:",
+                name_player_black,
+            )
+            print("Not enough moves to correlate!")
+        else:
+            print(
+                "Player with whites:",
+                name_player_white,
+                "|",
+                # percent of moves by the human with white pieces that were top choices of the engines
+                str(round(100 * (sum(best_white) / len(best_white)), 2)) + "%",
+            )
+            print(
+                "Player with blacks:",
+                name_player_black,
+                "|",
+                # percent of moves by the human with black pieces that were top choices of the engines
+                str(round(100 * (sum(best_black) / len(best_black)), 2)) + "%",
+            )
+        print("\n" + "-" * 80)  # separator between game analysis, 80 chars wide
 
 
 # print the status of the analysis on one line
 def print_status(message):
+    sys.stdout = old_stdout
     sys.stdout.write("\r\x1b[K" + message)
     sys.stdout.flush()
+    sys.stdout = logger_stdout
 
 
 # print the status of the analysis for each principal variation on several lines
 def print_status_multipv(message):
+    sys.stdout = old_stdout
     sys.stdout.write("\n" + message)
     sys.stdout.flush()
+    sys.stdout = logger_stdout
 
 
 # parse the command line arguments

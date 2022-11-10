@@ -25,28 +25,23 @@ you should do this for every engine that you want to add.
 ## Basic usage:
 ```
 python chessc.py --help
-usage: chessc.py [-h] (-t ANALYSIS_TIME | -d DEPTH) [-pv PRINCIPAL_VARIATIONS] -pgn
-                 PGN_FILES [-x] [-v]
+usage: chessc.py [-h] (-t ANALYSIS_TIME | -d DEPTH) [-b] [-pv PRINCIPAL_VARIATIONS] -pgn PGN_FILES [-v] [-V]
 
-Analyse PGN files with chess engines to show correlation between human player and
-engines.
+Analyse PGN files with chess engines to show correlation between human player and engines.
 
 options:
   -h, --help            show this help message and exit
   -t ANALYSIS_TIME, --analysis-time ANALYSIS_TIME
-                        Analysis time (in seconds) per move [mutually exclusive with
-                        --depth]
+                        Analysis time (in seconds) per move [mutually exclusive with --depth]
   -d DEPTH, --depth DEPTH
-                        Depth of analysis per move in ply [mutually exclusive with
-                        --analysis-time]
+                        Depth of analysis per move in ply [mutually exclusive with --analysis-time]
+  -b, --backwards       Sets the direction of the analysis to backwards, from last move back to first [forward by default]
   -pv PRINCIPAL_VARIATIONS, --principal-variations PRINCIPAL_VARIATIONS
-                        Number of principal variations (PV) per engine [this can make
-                        the correlation very high if greater than 1]
+                        Number of principal variations (PV) per engine [this can make the correlation very high if greater than 1]
   -pgn PGN_FILES, --pgn-files PGN_FILES
                         Folder with *.pgn files or a single pgn file to analyse
-  -x, --verbose         Show verbose info about the analysis when multipv(--principal-
-                        variations) mode is selected
-  -v, --version         show program's version number and exit
+  -v, --verbose         Show verbose info about the analysis when multipv(--principal-variations) mode is selected
+  -V, --version         show program's version number and exit
   ```
 ### Analyse all the PGN files inside the `pgn/` folder and stop analysing each position after the depth of 20 ply has been reached:
 ```
